@@ -11,12 +11,12 @@ import (
 var files embed.FS
 
 type App struct {
-	tmpl *template.Template
+	indexTmpl *template.Template
 }
 
 func main() {
 	app := &App{
-		tmpl: template.Must(template.ParseFS(files, "templates/*.html")),
+		indexTmpl: template.Must(template.ParseFS(files, "templates/layout.html", "templates/index.html")),
 	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", app.Index)
