@@ -5,5 +5,5 @@ import (
 )
 
 func (a *App) Index(w http.ResponseWriter, r *http.Request) {
-	a.indexTmpl.Execute(w, nil)
+	a.indexTmpl.ExecuteTemplate(w, "main", nil)
 }

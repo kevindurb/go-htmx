@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-//go:embed templates/*.html
+//go:embed templates/*.html templates/layouts/*.html
 var files embed.FS
 
 type App struct {
@@ -16,7 +16,7 @@ type App struct {
 
 func main() {
 	app := &App{
-		indexTmpl: template.Must(template.ParseFS(files, "templates/layout.html", "templates/index.html")),
+		indexTmpl: template.Must(template.ParseFS(files, "templates/layouts/main.html", "templates/index.html")),
 	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", app.Index)
