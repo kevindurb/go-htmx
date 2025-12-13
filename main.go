@@ -22,7 +22,3 @@ func main() {
 	mux.HandleFunc("GET /", app.Index)
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }
-
-func (a *App) Index(w http.ResponseWriter, r *http.Request) {
-	a.tmpl.Execute(w, nil)
-}
