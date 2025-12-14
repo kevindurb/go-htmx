@@ -1,3 +1,8 @@
 {{define "content"}}
 <h1>Hello World</h1>
+<ul>
+  {{range .Todos}}
+  <li>{{.Description}}</li>
+  {{end}}
+</ul>
 {{end}}
