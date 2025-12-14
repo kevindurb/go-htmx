@@ -1,0 +1,16 @@
+{{define "content"}}
+<h1>Todos</h1>
+<form method="post" action="/todos">
+  <input type="text" name="Description" autofocus />
+  <input type="submit" value="Add" />
+</form>
+<ul>
+  {{range .Todos}}
+  <li>
+    <form method="post" action="/todos/{{.ID}}/done">
+      {{.Description}} <input type="submit" value="Done" />
+    </form>
+  </li>
+  {{end}}
+</ul>
+{{end}}

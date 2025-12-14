@@ -9,8 +9,27 @@ import (
 	"context"
 )
 
+const insertTodo = `-- name: InsertTodo :exec
+INSERT INTO todos (description, done)
+VALUES (?, ?)
+RETURNING id, description, done, created_at
+`
+
+type InsertTodoParams struct {
+	Description string
+	Done        bool
+}
+
+func (q *Queries) InsertTodo(ctx context.Context, arg InsertTodoParams) error {
+	_, err := q.db.ExecContext(ctx, insertTodo, arg.Description, arg.Done)
+	return err
+}
+
 const listTodos = `-- name: ListTodos :many
-SELECT id, description, done, created_at FROM todos ORDER BY id
+SELECT id, description, done, created_at
+FROM todos
+WHERE done = false
+ORDER BY id
 `
 
 func (q *Queries) ListTodos(ctx context.Context) ([]Todo, error) {
@@ -39,4 +58,13 @@ func (q *Queries) ListTodos(ctx context.Context) ([]Todo, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const markTodoDone = `-- name: MarkTodoDone :exec
+UPDATE todos SET done = true WHERE id = ?
+`
+
+func (q *Queries) MarkTodoDone(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, markTodoDone, id)
+	return err
 }

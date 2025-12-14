@@ -18,8 +18,8 @@ var files embed.FS
 var ddl string
 
 type App struct {
-	indexTmpl *template.Template
-	queries   *queries.Queries
+	todoListTmpl *template.Template
+	queries      *queries.Queries
 }
 
 func main() {
@@ -34,11 +34,14 @@ func main() {
 	}
 
 	app := &App{
-		indexTmpl: template.Must(template.ParseFS(files, "templates/layouts/main.html", "templates/index.html")),
-		queries:   queries.New(db),
+		todoListTmpl: template.Must(template.ParseFS(files, "templates/layouts/main.html", "templates/todo-list.html")),
+		queries:      queries.New(db),
 	}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", app.Index)
+	mux.Handle("GET /", http.RedirectHandler("/todos", http.StatusFound))
+	mux.HandleFunc("GET /todos", app.ListTodos)
+	mux.HandleFunc("POST /todos", app.CreateTodo)
+	mux.HandleFunc("POST /todos/{id}/done", app.MarkTodoDone)
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }
